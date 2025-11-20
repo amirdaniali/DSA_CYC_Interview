@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+# DSA Interview Queue – React MVP
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A minimal scheduling app for managing DSA interview practice sessions.  
+Students can view sessions and sign up for the queue. Admins can create, update, and close sessions.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Technology Choices
 
-## React Compiler
+- **React + TypeScript** – Strong typing and modern component architecture.
+- **Vite** – Fast dev server and build tool.
+- **React Router** – Client-side routing for pages (`/sessions`, `/admin/sessions`, `/login`).
+- **shadcn/ui + TailwindCSS** – Prebuilt accessible UI components with Tailwind styling.
+- **Axios** – HTTP client for communicating with the backend API.
+- **Sonner** – Toast notifications for success/error feedback.
+- **JWT Auth** – Authentication with access/refresh tokens from the backend.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Clone the repo and install dependencies:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/your-org/dsa-queue.git
+cd dsa-queue
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Authentication
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Tokens are stored in localStorage (access, refresh).
+- Login via /api/token/ with username/password.
+- Axios interceptors automatically attach the Authorization: Bearer <token> header and refresh expired tokens.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Main Code Paths
+
+`src/lib/api.ts`
+
+- Configures Axios instance.
+- Handles token injection and refresh logic.
+
+`src/lib/types.ts`
+- TypeScript interfaces for Session, Signup, and TokenPair.
+
+`src/lib/sessionApi.ts` / `src/lib/signupApi.ts`
+
+- CRUD functions for sessions and signups.
+
+- Example: listSessions(), createSignup(payload).
+
+`src/lib/auth.ts`
+
+- login(username, password) → stores tokens in localStorage.
+
+
+
+## UI Components
+
+- Card, Button, Input, Select, Label – from shadcn/ui.
+- Sonner Toaster – global toast provider in main.tsx.
+- Responsive layout – Tailwind grid and spacing utilities.
+
+## Usage Flow
+
+-Student opens / → sees sessions → selects LC level → clicks Join queue.
+-Admin logs in → goes to /admin/sessions → creates sessions → closes them when appointments are set.
+-Logout button clears tokens and returns to login.
+
+## Future Improvements
+
+- Better signup management (view your own signup).
+- Session capacity enforcement.
+- Deployment pipeline 
+- Docker
+- Better UI
