@@ -1,27 +1,94 @@
-# backend/queue/serializers.py
 from rest_framework import serializers
-from .models import Session, Signup
+from .models import Session, Signup, EventTemplate, InterviewQueue
+from rest_framework.exceptions import PermissionDenied
+
 
 class SessionSerializer(serializers.ModelSerializer):
-    signup_count = serializers.IntegerField(read_only=True)
+    permissions = serializers.SerializerMethodField()
 
     class Meta:
         model = Session
-        fields = ["id", "date", "start_time", "end_time", "capacity", "is_active", "signup_count"]
+        fields = "__all__"
 
+    def get_permissions(self, obj):
+        user = self.context["request"].user
+        return {
+            "can_view": True,
+            "can_signup": user.is_authenticated and not obj.is_full(),
+            "can_modify": user.is_authenticated and user.groups.filter(name="event_admin").exists(),
+        }
 
 
 class SignupSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Signup model.
+    Ensures discord_username is auto-populated from the user if not provided.
+    """
+
     class Meta:
         model = Signup
-        fields = ["id", "session", "lc_level", "discord_username", "status", "created_at"]
-        extra_kwargs = {
-            "session": {"required": True},
-        }
+        fields = [
+            "id",
+            "user",
+            "session",
+            "created_at",
+            "status",
+            "lc_level",
+            "discord_username",
+        ]
+        read_only_fields = ["user", "created_at", "status"]
 
-    def validate(self, attrs):
-        # Reject unknown fields explicitly
-        for key in self.initial_data.keys():
-            if key not in self.fields:
-                raise serializers.ValidationError({key: "This field is not allowed."})
-        return attrs
+    def create(self, validated_data):
+        """
+        Auto-fill user and discord_username from the request context.
+        """
+        user = self.context["request"].user
+        validated_data["user"] = user
+        if not validated_data.get("discord_username"):
+            validated_data["discord_username"] = user.discord_username
+        return super().create(validated_data)
+
+
+
+
+
+class EventTemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventTemplate
+        fields = [
+            "id",
+            "name",
+            "day_of_week",
+            "start_time",
+            "end_time",
+            "capacity",
+            "start_date",
+            "end_date",
+            "created_by",
+        ]
+        read_only_fields = ["created_by"]
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        # Check permission before creating
+        if not (user.is_superuser or user.groups.filter(name="event_admin").exists()):
+            self.raise_permission_error()
+        validated_data["created_by"] = user
+        return super().create(validated_data)
+
+    def raise_permission_error(self):
+        """
+        Helper method: raise a PermissionDenied error with a clear message.
+        """
+        raise PermissionDenied(detail="You do not have permission to create or modify event templates.")
+
+
+
+
+
+class InterviewQueueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterviewQueue
+        fields = "__all__"
+
+
