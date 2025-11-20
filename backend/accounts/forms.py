@@ -1,22 +1,25 @@
-from django.contrib.auth.forms import AdminUserCreationForm, UserChangeForm
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 
 
-class CustomUserCreationForm(AdminUserCreationForm):
+class CustomUserCreationForm(UserCreationForm):
+    """
+    Form for creating new CustomUser instances.
+    Includes mandatory fields: username, email, full_name, discord_username.
+    """
 
-    class Meta:
+    class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = (
-            "email",
-            "username",
-        )
+        fields = ("username", "email", "full_name", "discord_username")
 
 
 class CustomUserChangeForm(UserChangeForm):
+    """
+    Form for updating CustomUser instances.
+    Includes mandatory fields: username, email, full_name, discord_username.
+    """
 
     class Meta:
         model = CustomUser
-        fields = (
-            "email",
-            "username",
-        )
+        fields = ("username", "email", "full_name", "discord_username")
