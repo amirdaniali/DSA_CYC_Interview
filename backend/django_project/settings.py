@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,11 +11,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-0peo@#x9jur3!h$ryje!$879xww8y1y66jx!%*#ymhg&jkozs2"
+
+# Load environment variables from .env
+load_dotenv()
+
+# Get token from .env
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+
+if not SECRET_KEY:
+    raise ValueError("DJANGO_API_TOKEN not found in .env file")
+
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+if DEBUG:
+    print("Secret Key:", SECRET_KEY)
+
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
