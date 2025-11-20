@@ -3,7 +3,7 @@
 ## Overview
 This project is a Django REST Framework backend for managing coding practice sessions and signups.
 It provides JWT authentication, custom user accounts, strict permissions, automated tests, and
-self-documenting API docs via OpenAPI/Swagger. You can set it up via Docket.
+self-documenting API docs via OpenAPI/Swagger. You can set it up via Docker.
 
 ---
 
@@ -50,7 +50,7 @@ self-documenting API docs via OpenAPI/Swagger. You can set it up via Docket.
   - Valid vs invalid input.
 - Run with:
   ```bash
-  python manage.py test homepage
+  python manage.py test dsa_queue
 
   
 ### 8. Setup Guide

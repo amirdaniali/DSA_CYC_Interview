@@ -10,7 +10,7 @@ urlpatterns = [
     # App routes
     path("accounts/", include("accounts.urls")),
     path("", include("pages.urls")),
-    path("api/", include("homepage.urls")),
+    path("api/", include("dsa_queue.urls")),
 
     # API schema & docs
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),

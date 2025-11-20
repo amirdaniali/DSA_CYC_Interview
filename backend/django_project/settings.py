@@ -51,10 +51,11 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "rest_framework",
     "drf_spectacular",
+    "corsheaders",
     # Local
     "accounts",
     "pages",
-    "homepage",
+    "dsa_queue",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # WhiteNoise
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware", #  Cors
     "django.middleware.common.CommonMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",  # Django Debug Toolbar
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -255,3 +257,14 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),   # default is 5 minutes
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),    # default is 1 day
 }
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",   # React dev server
+    "http://127.0.0.1:5173",   # sometimes needed
+]
+
+# CORS_ALLOW_ALL_ORIGINS = True
+
+
+CORS_ALLOW_CREDENTIALS = True

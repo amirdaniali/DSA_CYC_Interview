@@ -2,7 +2,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
-from homepage.models import Session, Signup
+from api.models import Session, Signup
 
 User = get_user_model()
 
