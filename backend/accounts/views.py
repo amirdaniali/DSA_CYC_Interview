@@ -1,10 +1,10 @@
 # accounts/views.py
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets
-from accounts.serializers import UserSerializer
-from accounts.permissions import IsAdminOrSelf
+from rest_framework import viewsets,  generics
+from .serializers import UserSerializer, CustomTokenObtainPairSerializer, SignupSerializer
+from .permissions import IsAdminOrSelf
 from rest_framework_simplejwt.views import TokenObtainPairView
-from accounts.serializers import CustomTokenObtainPairSerializer
+
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -33,3 +33,12 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+
+
+
+
+
+class SignupView(generics.CreateAPIView):
+    queryset = get_user_model().objects.all()
+    serializer_class = SignupSerializer
+    permission_classes = []  # allow anyone to sign up

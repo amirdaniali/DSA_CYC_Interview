@@ -36,3 +36,23 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         data["role"] =  "admin" if len(self.user.get_all_permissions()) > 0 else "user"
         # data["roles"] = [g.name for g in self.user.groups.all()]
         return data
+
+
+
+
+class SignupSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ["username", "email", "password", "full_name", "discord_username"]
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data["username"],
+            email=validated_data.get("email"),
+            password=validated_data["password"],
+            full_name=validated_data.get("full_name", ""),
+            discord_username=validated_data.get("discord_username", ""),
+        )
+        return user
