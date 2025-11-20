@@ -1,4 +1,3 @@
-# backend/queue/admin.py
 from django.contrib import admin
 from .models import EventTemplate, Session, Signup, InterviewQueue
 

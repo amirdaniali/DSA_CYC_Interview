@@ -1,22 +1,34 @@
-import { Outlet, Link, useLocation } from "react-router";
+// AppLayout.tsx
+import { useAuth } from "@/context/AuthContext";
+import { Link, Outlet } from "react-router";
 import { Button } from "@/components/ui/button";
 
-
 export default function AppLayout() {
-  const loc = useLocation();
+  const { user, logoutUser } = useAuth();
+
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen flex flex-col">
       <header className="border-b bg-white">
         <div className="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between">
-          <Link to="/" className="font-semibold tracking-tight">DSA Interviews Queue</Link>
+          <Link to="/" className="font-semibold">DSA Queue</Link>
           <nav className="flex gap-3">
-            <Link to="/sessions"><Button variant={loc.pathname==="/sessions"?"default":"ghost"}>Sessions</Button></Link>
-            <Link to="/admin/sessions"><Button variant={loc.pathname==="/admin/sessions"?"default":"ghost"}>Admin</Button></Link>
-            <Link to="/login"><Button variant={loc.pathname==="/login"?"default":"outline"}>Login</Button></Link>
+            {user?.isAdmin && (
+              <Link to="/manage">
+                <Button variant="ghost">Admin Panel</Button>
+              </Link>
+            )}
+            {!user ? (
+              <>
+                <Link to="/login"><Button>Login</Button></Link>
+                <Link to="/signup"><Button variant="outline">Signup</Button></Link>
+              </>
+            ) : (
+              <Button variant="outline" onClick={logoutUser}>Logout</Button>
+            )}
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-8">
+      <main className="flex-1 mx-auto max-w-5xl px-4 py-6">
         <Outlet />
       </main>
     </div>

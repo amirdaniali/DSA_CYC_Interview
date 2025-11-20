@@ -1,4 +1,3 @@
-
 import api from "./api";
 import type { Signup } from "./types";
 

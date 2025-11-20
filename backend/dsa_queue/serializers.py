@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Session, Signup, EventTemplate, InterviewQueue
 from rest_framework.exceptions import PermissionDenied
 
+
 class SessionSerializer(serializers.ModelSerializer):
     permissions = serializers.SerializerMethodField()
 
@@ -89,3 +90,5 @@ class InterviewQueueSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterviewQueue
         fields = "__all__"
+
+
