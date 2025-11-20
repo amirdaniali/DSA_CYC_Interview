@@ -1,5 +1,6 @@
 # homepage/models.py
 from django.db import models
+from django.conf import settings  # still works because AUTH_USER_MODEL points to CustomUser
 
 class Session(models.Model):
     date = models.DateField()
@@ -13,11 +14,17 @@ class Session(models.Model):
 
 
 class Signup(models.Model):
-    # Instead of linking to auth_user, just store basic info
-    name = models.CharField(max_length=100, blank=True, null=True)
-    email = models.EmailField(blank=True, null=True) 
-    discord_username = models.CharField(max_length=100, blank=True, null=True)  
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="signups")
+    # Link to your custom user model
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,  # this will resolve to accounts.CustomUser
+        on_delete=models.CASCADE,
+        related_name="signups"
+    )
+    session = models.ForeignKey(
+        Session,
+        on_delete=models.CASCADE,
+        related_name="signups"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         max_length=20,
@@ -30,9 +37,10 @@ class Signup(models.Model):
         null=True,
         blank=True,
     )
+    discord_username = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
         ordering = ["created_at"]
 
     def __str__(self):
-        return f"{self.name} ({self.session.date})"
+        return f"{self.user.username} → {self.session.date}"

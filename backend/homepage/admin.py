@@ -11,6 +11,6 @@ class SessionAdmin(admin.ModelAdmin):
 
 @admin.register(Signup)
 class SignupAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "session", "created_at", "status", "lc_level")
+    list_display = ("user", "discord_username", "session", "created_at", "status", "lc_level")
     list_filter = ("status", "lc_level", "session")
-    search_fields = ("name", "email", "session__date")
+    search_fields = ("user__username", "user__email", "discord_username", "session__date")

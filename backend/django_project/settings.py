@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,15 +20,12 @@ load_dotenv()
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 if not SECRET_KEY:
-    raise ValueError("DJANGO_API_TOKEN not found in .env file")
+    raise ValueError("DJANGO_API_TOKEN not found in .env file. Rename .env.template to .env and define your secret key.")
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-if DEBUG:
-    print("Secret Key:", SECRET_KEY)
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
@@ -226,9 +224,24 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",  # or SessionAuthentication
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
+}
+
+
+# 1 hour = 3600 seconds
+# 1 day = 86400 seconds
+# 2 weeks = 1209600 seconds
+SESSION_COOKIE_AGE = 36000  # 1 day
+
+# Keep session alive even if browser closes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),   # default is 5 minutes
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),    # default is 1 day
 }
