@@ -57,19 +57,29 @@ self-documenting API docs via OpenAPI/Swagger. You can set it up via Docket.
 
 Clone and Installgit clone [github.com/amirdaniali/DSA_CYC_Interview:git](https://github.com/amirdaniali/DSA_CYC_Interview.git) 
 
-You can use [uv](https://docs.astral.sh/uv/) to create a dedicated virtual environment.
 
 ```bash
 cd backend
 uv -m venv .venv
 source .venv/bin/activate   # or .venv\Scripts\activate on Windows 
-uv pip install -r requirements.txt
-
 ```
+
+
+You can use [uv](https://docs.astral.sh/uv/) to create a dedicated virtual environment.
+
+```bash
+uv pip install -r requirements.txt
+```
+
+#### Env Setup
+
+Rename `.env.template` file to `.env`. Modify the Secret to your liking. then run:
 
 To use PIP instead, create a new virtual environment and then install all packages hosted in `requirements.txt`. Run `migrate` to configure the initial database. and `createsuperuser` to create a new superuser account for accessing the admin. Execute the `runserver` command to start up the local server.
 
-```
+
+
+```bash
 (.venv) $ pip install -r requirements.txt
 (.venv) $ python manage.py migrate
 (.venv) $ python manage.py createsuperuser
@@ -80,10 +90,10 @@ To use PIP instead, create a new virtual environment and then install all packag
 
 Then run `migrate` to configure the initial database. The command `createsuperuser` will create a new superuser account for accessing the admin. Execute the `runserver` command to start up the local server.
 
-```
-$ uv run manage.py migrate
-$ uv run manage.py createsuperuser
-$ uv run manage.py runserver
+```bash
+$ python manage.py migrate
+$ python manage.py createsuperuser
+$ python manage.py runserver
 # Load the site at http://127.0.0.1:8000 or http://127.0.0.1:8000/admin for the admin
 ```
 
