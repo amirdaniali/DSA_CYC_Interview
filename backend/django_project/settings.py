@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "debug_toolbar",
     "rest_framework",
+    "drf_spectacular",
     # Local
     "accounts",
     "pages",
@@ -224,13 +225,22 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",  # or SessionAuthentication
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ),
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Queue API",
+    "DESCRIPTION": "API documentation for sessions and signups",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
 
 
 # 1 hour = 3600 seconds
